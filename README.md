@@ -9,7 +9,7 @@ nmap -sV --script vulners <target>
 
 ## Description
 
-NSE script using some well-known service to provide info on vulnerabilities. Note that it is already included into the standard nmap NSE library.
+NSE script uses info about known services to provide data on vulnerabilities. Note that it is already included into the standard nmap NSE library.
 
 ![Result example](example.png)
 
@@ -20,7 +20,7 @@ NSE script using some well-known service to provide info on vulnerabilities. Not
         string
     http-vulners-regex
 
-The only thing you should always keep in mind is that the script depends on having software versions at hand, so it only works with -sV flag.
+Keep in mind that the script depends on having information about software versions, so it only works with -sV flag.
 
 **NB:** Now it can actually be run without -sV flag if http-vulners-regex script is run as well.
 
@@ -42,7 +42,7 @@ It is KISS after all.
 
 ## Description
 
-NSE script to scan HTTP responses and identify CPEs for the mentioned software. It can therefore boost the efficiency of the main vulners script.
+NSE script scans HTTP responses and identifies CPEs for the mentioned software. It can therefore boost the efficiency of the main vulners script.
 
 ![Result example](simple_regex_example.png)
 Or with the paths:
@@ -71,3 +71,26 @@ Or with the paths:
 ## Usage
     As a usual NSE script:
         nmap --script http-vulners-regex.nse [--script-args paths={"/"}] <target> 
+
+
+# vulners_enterprise
+
+## Description 
+This is basically the good old faithfull nmap-vulners from above with one exception: it requires an API_KEY to work. 
+
+You can either specify it on the CLI using the 'api_key' script argument, set it into an envirotnment variable VULNERS_API_KEY, or store it in a file readable by the user running nmap. In this case you must specify the absolute path to the file using the 'api_key_file' script argument.
+
+## Usage
+    As a usual NSE script:
+        nmap -sV --script vulners_enterprise [--script-args mincvss=<arg_val>,api_key=<api_key>,api_key_file=<absolute_path>,api_host=http://my_host.com] <target>
+        
+### NSE Arguments
+
+**vulners_enterprise.mincvss** Limit CVEs shown to those with this CVSS score or greater.
+
+**vulners_enterprise.api_key** API token to be used in the requests
+
+**vulners_enterprise.api_key_file** Absolute path to the file with a single line containing the API token
+
+**vulners_enterprise.api_host** URL to vulners API without the leading slash. Defaults to https://vulners.com
+
